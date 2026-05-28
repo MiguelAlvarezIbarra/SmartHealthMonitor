@@ -16,4 +16,4 @@ Desarrollada como proyecto integrador en UTNG — 9° Cuatrimestre 2025.
 - [ ] Android TV — S10-S12
 
 ## Autor
-Miguel Angel Alvarez Ibarra — UTNG — tu.email@utng.edu.mx
+Miguel Angel Alvarez Ibarra — UTNG — miguelangelalvarezibarrautng@gmail.com
