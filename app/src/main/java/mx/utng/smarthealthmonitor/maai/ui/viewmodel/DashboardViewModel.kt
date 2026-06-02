@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import mx.utng.smarthealthmonitor.maai.data.SmartHealthRepository
+import mx.utng.smarthealthmonitor.maai.data.db.LecturaFC
 import mx.utng.smarthealthmonitor.maai.data.models.MockData
 
 class DashboardViewModel : ViewModel() {
@@ -27,5 +28,11 @@ class DashboardViewModel : ViewModel() {
             initialValue = MockData.pasosActual
         )
 
-    val historial = MockData.historialFC
+    val historial: StateFlow<List<LecturaFC>> =
+        SmartHealthRepository.obtenerHistorial()
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = emptyList()
+            )
 }

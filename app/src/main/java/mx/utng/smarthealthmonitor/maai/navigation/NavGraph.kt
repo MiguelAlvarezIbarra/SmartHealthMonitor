@@ -14,6 +14,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import mx.utng.smarthealthmonitor.maai.LoginScreen
 import mx.utng.smarthealthmonitor.maai.ui.screens.DashboardScreen
+import mx.utng.smarthealthmonitor.maai.ui.screens.HistorialScreen
 import mx.utng.smarthealthmonitor.maai.ui.theme.SmartHealthMonitorTheme
 
 @Composable
@@ -40,8 +41,7 @@ fun SmartHealthNavGraph() {
             )
         }
         composable(Screen.Historial.route) {
-            PantallaEnConstruccion(
-                titulo = "Historial completo",
+            HistorialScreen(
                 onBack = { navController.popBackStack() }
             )
         }
