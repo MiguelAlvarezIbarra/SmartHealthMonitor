@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="android.permission.BODY_SENSORS" />
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
 
     <application
         android:allowBackup="true"
@@ -29,6 +31,14 @@
                 <data android:scheme="wear"
                     android:host="*"
                     android:pathPrefix="/smarthealthmonitor" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".HealthDataService"
+            android:exported="true"
+            android:permission="com.google.android.wearable.permission.BIND_LISTENER">
+            <intent-filter>
+                <action android:name="androidx.health.services.client.PASSIVE_LISTENER" />
             </intent-filter>
         </service>
     </application>
