@@ -12,6 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import mx.utng.smarthealthmonitor.maai.data.SmartHealthRepository
 import mx.utng.smarthealthmonitor.maai.ui.components.FilaHistorial
 import mx.utng.smarthealthmonitor.maai.ui.components.TarjetaDato
@@ -27,7 +30,7 @@ fun DashboardScreen(
 ) {
     val fc by viewModel.fc.collectAsState()
     val pasos by viewModel.pasos.collectAsState()
-    val historial = viewModel.historial
+    val historial by viewModel.historial.collectAsState()
 
     SmartHealthMonitorTheme {
         Scaffold(
@@ -60,7 +63,7 @@ fun DashboardScreen(
             ) {
                 item {
                     TarjetaDato(
-                        valor = "$fc",
+                        valor = if (fc > 0) "$fc" else "--",
                         unidad = "bpm",
                         label = "Frecuencia cardíaca",
                         colorValor = MaterialTheme.colorScheme.error
@@ -68,7 +71,7 @@ fun DashboardScreen(
                 }
                 item {
                     TarjetaDato(
-                        valor = "%,d".format(pasos),
+                        valor = if (pasos > 0) "%,d".format(pasos) else "--",
                         unidad = "pasos",
                         label = "Pasos del día",
                         colorValor = MaterialTheme.colorScheme.primary
@@ -90,8 +93,10 @@ fun DashboardScreen(
                 item {
                     OutlinedButton(
                         onClick = {
-                            SmartHealthRepository.actualizarFC((60..110).random())
-                            SmartHealthRepository.actualizarPasos((3000..8000).random())
+                            CoroutineScope(Dispatchers.IO).launch {
+                                SmartHealthRepository.actualizarFC((60..110).random())
+                                SmartHealthRepository.actualizarPasos((3000..8000).random())
+                            }
                         },
                         modifier = Modifier.fillMaxWidth()
                     ) {

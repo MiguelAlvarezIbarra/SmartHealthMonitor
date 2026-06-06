@@ -1,21 +1,22 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {
-    namespace = "mx.utng.smarthealthmonitor.maai"
-    compileSdk = 36
+    // namespace = paquete donde viven las clases Kotlin reales del wear
+    namespace = "mx.utng.smarthealthmonitor.wear.maai"
+    compileSdk {
+        version = release(36)
+    }
 
     defaultConfig {
         applicationId = "mx.utng.smarthealthmonitor.maai"
-        minSdk = 26
-        targetSdk = 35
+        minSdk = 30
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -31,36 +32,37 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    buildFeatures {
-        compose = true
-    }
     kotlinOptions {
         jvmTarget = "11"
+    }
+    useLibrary("wear-sdk")
+    buildFeatures {
+        compose = true
     }
 }
 
 dependencies {
+    implementation(libs.play.services.wearable)
     implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    testImplementation(libs.junit)
+    implementation(libs.androidx.compose.material)
+    implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.wear.tooling.preview)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.core.splashscreen)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(libs.androidx.junit)
-    debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
-    implementation("androidx.compose.material:material-icons-extended")
-    implementation("androidx.navigation:navigation-compose:2.8.0")
-    implementation("com.google.android.gms:play-services-wearable:18.2.0")
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
+    // Health Services API
+    implementation("androidx.health:health-services-client:1.1.0-alpha03")
+
+    // Coroutines await() para Guava ListenableFuture
+    implementation("com.google.guava:guava:33.0.0-android")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.7.3")
+
+    // Coroutines + GMS Tasks (para Tasks.await())
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
-    val roomVersion = "2.6.1"
-    implementation("androidx.room:room-runtime:$roomVersion")
-    implementation("androidx.room:room-ktx:$roomVersion")
-    ksp("androidx.room:room-compiler:$roomVersion")
 }
