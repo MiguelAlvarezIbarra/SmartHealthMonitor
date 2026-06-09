@@ -32,8 +32,35 @@ fun DashboardScreen(
     val pasos by viewModel.pasos.collectAsState()
     val historial by viewModel.historial.collectAsState()
 
+    // ── Estado del diálogo y Snackbar ──────────────────────
+    var mostrarAlerta by remember { mutableStateOf(false) }
+    val snackbarHost = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
+    // ── Diálogo condicional ────────────────────────────────
+    if (mostrarAlerta) {
+        AlertaScreen(
+            fc = fc,
+            onDismiss = { mostrarAlerta = false },
+            onConfirmar = { nota ->
+                mostrarAlerta = false
+                scope.launch {
+                    val result = snackbarHost.showSnackbar(
+                        message = "✅ Alerta enviada a tus contactos de emergencia${if (nota.isNotBlank()) " con nota" else ""}",
+                        actionLabel = "Deshacer",
+                        duration = SnackbarDuration.Long
+                    )
+                    if (result == SnackbarResult.ActionPerformed) {
+                        snackbarHost.showSnackbar("Alerta cancelada")
+                    }
+                }
+            }
+        )
+    }
+
     SmartHealthMonitorTheme {
         Scaffold(
+            snackbarHost = { SnackbarHost(hostState = snackbarHost) },
             topBar = {
                 TopAppBar(
                     title = { Text("SmartHealth", style = MaterialTheme.typography.titleLarge) },
@@ -45,12 +72,12 @@ fun DashboardScreen(
             },
             floatingActionButton = {
                 FloatingActionButton(
-                    onClick = onAlertClick,
+                    onClick = { mostrarAlerta = true },
                     containerColor = MaterialTheme.colorScheme.error
                 ) {
                     Icon(
                         imageVector = Icons.Default.Warning,
-                        contentDescription = "Enviar alerta",
+                        contentDescription = "Enviar alerta de emergencia",
                         tint = MaterialTheme.colorScheme.onError
                     )
                 }

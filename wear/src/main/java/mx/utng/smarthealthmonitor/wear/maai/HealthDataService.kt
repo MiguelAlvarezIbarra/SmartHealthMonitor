@@ -23,9 +23,9 @@ class HealthDataService : PassiveListenerService() {
         if (lastFC is SampleDataPoint<Double>) {
             val bpm = lastFC.value.toInt()
             Log.d(TAG, "FC recibida (última del lote): $bpm BPM")
-            scope.launch {
-                enviarDato(applicationContext, "/smarthealthmonitor/fc", bpm.toString(), "BPM")
-            }
+            // scope.launch {
+            //     enviarDato(applicationContext, "/smarthealthmonitor/fc", bpm.toString(), "BPM")
+            // }
         }
 
         val stepsDataPoints = dataPoints.getData(DataType.STEPS_DAILY)
@@ -39,9 +39,9 @@ class HealthDataService : PassiveListenerService() {
                 else      -> value.toString().toIntOrNull() ?: 0
             }
             Log.d(TAG, "Pasos recibidos: $pasos")
-            scope.launch {
-                enviarDato(applicationContext, "/smarthealthmonitor/pasos", pasos.toString(), "Pasos")
-            }
+            // scope.launch {
+            //     enviarDato(applicationContext, "/smarthealthmonitor/pasos", pasos.toString(), "Pasos")
+            // }
         }
     }
 
