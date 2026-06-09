@@ -47,9 +47,7 @@ class MainActivity : ComponentActivity() {
                 val bpm = lastFC.value.toInt()
                 Log.d("MainActivity", "FC recibida: $bpm BPM")
                 currentHeartRate.value = bpm
-                lifecycleScope.launch {
-                    HealthDataService.enviarFCDirectamente(applicationContext, bpm)
-                }
+                // NO enviamos automáticamente, solo guardamos el estado
             }
 
             val stepsData = data.getData(DataType.STEPS_DAILY)
@@ -63,9 +61,7 @@ class MainActivity : ComponentActivity() {
                     else -> value.toString().toIntOrNull() ?: 0
                 }
                 Log.d("MainActivity", "Pasos recibidos: $pasos")
-                lifecycleScope.launch {
-                    HealthDataService.enviarPasosDirectamente(applicationContext, pasos)
-                }
+                // NO enviamos automáticamente, solo los registramos en log local
             }
         }
     }
