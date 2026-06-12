@@ -65,4 +65,16 @@ dependencies {
 
     // Coroutines + GMS Tasks (para Tasks.await())
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+
+    // Compose for Wear OS
+    implementation("androidx.wear.compose:compose-material:1.3.1")
+    implementation("androidx.wear.compose:compose-foundation:1.3.1")
+    implementation("androidx.wear.compose:compose-navigation:1.3.1")
+    // Horologist (utilidades Wear OS de Google)
+    implementation("com.google.android.horologist:horologist-compose-layout:0.6.17")
+    implementation("com.google.android.horologist:horologist-compose-material:0.6.17")
+    // Compartir Repository
+    implementation(project(":shared"))
+    // Iconos extendidos
+    implementation("androidx.compose.material:material-icons-extended")
 }

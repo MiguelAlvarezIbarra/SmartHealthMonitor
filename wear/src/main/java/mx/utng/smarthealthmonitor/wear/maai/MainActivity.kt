@@ -25,6 +25,9 @@ import androidx.health.services.client.data.DataPointContainer
 import androidx.health.services.client.data.DataType
 import androidx.health.services.client.data.DeltaDataType
 import androidx.health.services.client.data.SampleDataPoint
+import mx.utng.smarthealthmonitor.maai.data.SmartHealthRepository
+import mx.utng.smarthealthmonitor.wear.maai.presentation.theme.SmartHealthWearTheme
+import mx.utng.smarthealthmonitor.wear.maai.presentation.SmartHealthWearNavGraph
 
 class MainActivity : ComponentActivity() {
 
@@ -47,7 +50,9 @@ class MainActivity : ComponentActivity() {
                 val bpm = lastFC.value.toInt()
                 Log.d("MainActivity", "FC recibida: $bpm BPM")
                 currentHeartRate.value = bpm
-                // NO enviamos automáticamente, solo guardamos el estado
+                lifecycleScope.launch {
+                    SmartHealthRepository.actualizarFC(bpm)
+                }
             }
 
             val stepsData = data.getData(DataType.STEPS_DAILY)
@@ -61,7 +66,7 @@ class MainActivity : ComponentActivity() {
                     else -> value.toString().toIntOrNull() ?: 0
                 }
                 Log.d("MainActivity", "Pasos recibidos: $pasos")
-                // NO enviamos automáticamente, solo los registramos en log local
+                SmartHealthRepository.actualizarPasos(pasos)
             }
         }
     }
@@ -104,10 +109,12 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
         super.onCreate(savedInstanceState)
         setTheme(android.R.style.Theme_DeviceDefault)
+        SmartHealthRepository.init(applicationContext)
         verificarYSolicitarPermisos()
         setContent {
-            val heartRate by currentHeartRate
-            WearApp(heartRate = heartRate)
+            SmartHealthWearTheme {
+                SmartHealthWearNavGraph()
+            }
         }
     }
 
@@ -158,83 +165,4 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun WearApp(heartRate: Int) {
-    val context = androidx.compose.ui.platform.LocalContext.current
-    val scope = rememberCoroutineScope()
-
-    SmartHealthMonitorTheme {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colors.background),
-            contentAlignment = Alignment.Center
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(6.dp)
-            ) {
-                Text(
-                    text = "SmartHealth",
-                    style = MaterialTheme.typography.caption1
-                )
-
-                if (heartRate > 0) {
-                    Text(
-                        text = "$heartRate BPM",
-                        style = MaterialTheme.typography.title1
-                    )
-                    Text(
-                        text = "Enviando al cel...",
-                        style = MaterialTheme.typography.caption2
-                    )
-                } else {
-                    Text(
-                        text = "Midiendo...",
-                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                    )
-                    Text(
-                        text = "Ajusta FC en el emulador",
-                        style = MaterialTheme.typography.caption2,
-                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(4.dp))
-
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.padding(top = 8.dp)
-                ) {
-                    Chip(
-                        onClick = {
-                            scope.launch {
-                                val bpmToSend = if (heartRate > 0) heartRate
-                                else (60..120).random()
-                                HealthDataService.enviarFCDirectamente(context, bpmToSend)
-                            }
-                        },
-                        label = { Text("Enviar FC") },
-                        colors = ChipDefaults.primaryChipColors()
-                    )
-
-                    Chip(
-                        onClick = {
-                            scope.launch {
-                                val pasosToSend = (1000..10000).random()
-                                HealthDataService.enviarPasosDirectamente(context, pasosToSend)
-                            }
-                        },
-                        label = { Text("Pasos") },
-                        colors = ChipDefaults.secondaryChipColors()
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun SmartHealthMonitorTheme(content: @Composable () -> Unit) {
-    MaterialTheme(content = content)
-}
+// Removed old WearApp and SmartHealthMonitorTheme
