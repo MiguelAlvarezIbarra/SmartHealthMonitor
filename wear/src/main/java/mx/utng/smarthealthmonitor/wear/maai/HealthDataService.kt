@@ -11,6 +11,7 @@ import androidx.health.services.client.data.SampleDataPoint
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.Wearable
 import kotlinx.coroutines.*
+import mx.utng.smarthealthmonitor.maai.data.SmartHealthRepository
 
 class HealthDataService : PassiveListenerService() {
 
@@ -22,10 +23,11 @@ class HealthDataService : PassiveListenerService() {
         val lastFC = fcDataPoints.lastOrNull()
         if (lastFC is SampleDataPoint<Double>) {
             val bpm = lastFC.value.toInt()
-            Log.d(TAG, "FC recibida (última del lote): $bpm BPM")
-            // scope.launch {
-            //     enviarDato(applicationContext, "/smarthealthmonitor/fc", bpm.toString(), "BPM")
-            // }
+            Log.d(TAG, "FC recibida: $bpm BPM")
+            // ✅ ANTES: solo hacía Log, ahora actualiza el Repository
+            scope.launch {
+                SmartHealthRepository.actualizarFC(bpm)
+            }
         }
 
         val stepsDataPoints = dataPoints.getData(DataType.STEPS_DAILY)
@@ -39,9 +41,8 @@ class HealthDataService : PassiveListenerService() {
                 else      -> value.toString().toIntOrNull() ?: 0
             }
             Log.d(TAG, "Pasos recibidos: $pasos")
-            // scope.launch {
-            //     enviarDato(applicationContext, "/smarthealthmonitor/pasos", pasos.toString(), "Pasos")
-            // }
+            // ✅ ANTES: solo hacía Log, ahora actualiza el Repository
+            SmartHealthRepository.actualizarPasos(pasos)
         }
     }
 
@@ -57,35 +58,28 @@ class HealthDataService : PassiveListenerService() {
         private suspend fun enviarDato(context: Context, path: String, valor: String, label: String) =
             withContext(Dispatchers.IO) {
                 try {
-                    Log.i(TAG, "📡 Intentando enviar $label=$valor por path=$path")
                     val nodeClient    = Wearable.getNodeClient(context)
                     val messageClient = Wearable.getMessageClient(context)
                     val data          = valor.toByteArray(Charsets.UTF_8)
-
                     val nodes = Tasks.await(nodeClient.connectedNodes)
-                    Log.i(TAG, "🔗 Nodos conectados: ${nodes.size} → ${nodes.map { "${it.displayName}(${it.id})" }}")
-
                     if (nodes.isEmpty()) {
-                        Log.w(TAG, "⚠️ Sin nodos conectados. ¿Están ambos emuladores pareados?")
+                        Log.w(TAG, "Sin nodos conectados")
                         return@withContext
                     }
-
                     for (node in nodes) {
-                        try {
-                            // Esperamos la confirmación real de envío
-                            Tasks.await(messageClient.sendMessage(node.id, path, data))
-                            Log.i(TAG, "✅ $label enviado a ${node.displayName} (${node.id}): $valor")
-                        } catch (e: Exception) {
-                            Log.e(TAG, "❌ Error enviando a ${node.displayName}: ${e.message}")
-                        }
+                        Tasks.await(messageClient.sendMessage(node.id, path, data))
+                        Log.i(TAG, "✅ $label enviado a ${node.displayName}: $valor")
                     }
                 } catch (e: Exception) {
-                    Log.e(TAG, "❌ Error general en enviarDato($label): ${e.javaClass.simpleName}: ${e.message}")
+                    Log.e(TAG, "Error en enviarDato($label): ${e.message}")
                 }
             }
 
         suspend fun registrar(context: Context) {
             try {
+                // ✅ Inicializar el Repository con contexto para que el DAO no sea null
+                SmartHealthRepository.init(context)
+
                 val hsClient      = HealthServices.getClient(context)
                 val passiveClient = hsClient.passiveMonitoringClient
 
@@ -115,4 +109,4 @@ class HealthDataService : PassiveListenerService() {
             enviarDato(context, "/smarthealthmonitor/pasos", pasos.toString(), "Pasos")
         }
     }
-}
+}
