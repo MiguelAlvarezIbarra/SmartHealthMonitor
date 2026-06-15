@@ -77,4 +77,7 @@ dependencies {
     implementation(project(":shared"))
     // Iconos extendidos
     implementation("androidx.compose.material:material-icons-extended")
+    // WatchFace básico — Sesión 10
+    implementation("androidx.wear.watchface:watchface:1.2.1")
+    implementation("androidx.wear.watchface:watchface-guava:1.2.1")
 }

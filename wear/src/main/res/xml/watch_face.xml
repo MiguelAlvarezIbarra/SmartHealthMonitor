@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Descriptor requerido por android.service.wallpaper para registrar el WatchFace -->
+<wallpaper xmlns:android="http://schemas.android.com/apk/res/android" />
