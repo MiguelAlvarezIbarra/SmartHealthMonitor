@@ -33,3 +33,18 @@ Desarrollada como proyecto integrador — UTNG 9° Cuatrimestre 2025.
 
 ## Autor
 Miguel Angel Alvarez Ibarra — UTNG — Ing. en Desarrollo y Gestión de Software
+
+## Unidad II — Wear OS
+| Pantalla | Descripción |
+|---|---|
+| WearDashboardScreen | FC en tiempo real con ScalingLazyColumn y TimeText |
+| WearHistorialScreen | Lista con Rotary Input (corona del reloj) |
+| WearAlertaScreen    | Botones circulares de confirmación |
+| SmartHealth WatchFace | Hora + FC en el WatchFace nativo |
+
+Watchface
+<img width="269" height="266" alt="Captura de pantalla 2026-06-15 005352" src="https://github.com/user-attachments/assets/b9a6b8f6-e14f-45b7-8c34-6aa4a4fee62a" />
+
+Wear Dashboard
+<img width="560" height="559" alt="Captura de pantalla 2026-06-12 140151" src="https://github.com/user-attachments/assets/3a72e727-d3a5-4b60-b684-1656045b4720" />
+<img width="550" height="551" alt="Captura de pantalla 2026-06-12 140543" src="https://github.com/user-attachments/assets/d656ba4f-a9db-493a-8ce9-8ce30ef4f03e" />
