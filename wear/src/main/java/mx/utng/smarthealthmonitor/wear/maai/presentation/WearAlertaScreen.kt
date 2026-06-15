@@ -1,6 +1,7 @@
 package mx.utng.smarthealthmonitor.wear.maai.presentation
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -17,7 +19,10 @@ import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.MaterialTheme
+import androidx.wear.compose.material.SwipeToDismissBox
+import androidx.wear.compose.material.SwipeToDismissValue
 import androidx.wear.compose.material.Text
+import androidx.wear.compose.material.rememberSwipeToDismissBoxState
 
 @Composable
 fun WearAlertaScreen(
@@ -25,41 +30,74 @@ fun WearAlertaScreen(
     onConfirmar: () -> Unit,
     onCancelar: () -> Unit
 ) {
-    Column(
-        modifier = Modifier.fillMaxSize().padding(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
-    ) {
-        Text(
-            "FC: $fc bpm",
-            style = MaterialTheme.typography.title3,
-            color = MaterialTheme.colors.error
-        )
-        Text(
-            "¿Enviar alerta?",
-            style = MaterialTheme.typography.body2
-        )
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Button(
-                onClick = onConfirmar,
-                modifier = Modifier.size(52.dp),
-                colors = ButtonDefaults.primaryButtonColors(
-                    backgroundColor = MaterialTheme.colors.error
-                )
+    // — SwipeToDismissBox —
+    // El gesto swipe desde el borde izquierdo descarta la pantalla (llama a onCancelar)
+    val swipeState = rememberSwipeToDismissBoxState()
+
+    LaunchedEffect(swipeState.currentValue) {
+        if (swipeState.currentValue == SwipeToDismissValue.Dismissed) {
+            onCancelar()
+        }
+    }
+
+    SwipeToDismissBox(
+        state = swipeState,
+        modifier = Modifier.fillMaxSize()
+    ) { isBackground ->
+        if (isBackground) {
+            // Fondo visible durante el gesto de swipe (vacío / color primario)
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    Icons.Default.Check,
-                    contentDescription = "Confirmar alerta"
+                Text(
+                    text = "← Cancelar",
+                    style = MaterialTheme.typography.body2,
+                    color = MaterialTheme.colors.onSurface
                 )
             }
-            Button(
-                onClick = onCancelar,
-                modifier = Modifier.size(52.dp)
+        } else {
+            // Contenido principal de la pantalla de alerta
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
             ) {
-                Icon(
-                    Icons.Default.Close,
-                    contentDescription = "Cancelar"
+                Text(
+                    "FC: $fc bpm",
+                    style = MaterialTheme.typography.title3,
+                    color = MaterialTheme.colors.error
                 )
+                Text(
+                    "¿Enviar alerta?",
+                    style = MaterialTheme.typography.body2
+                )
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(
+                        onClick = onConfirmar,
+                        modifier = Modifier.size(52.dp),
+                        colors = ButtonDefaults.primaryButtonColors(
+                            backgroundColor = MaterialTheme.colors.error
+                        )
+                    ) {
+                        Icon(
+                            Icons.Default.Check,
+                            contentDescription = "Confirmar alerta"
+                        )
+                    }
+                    Button(
+                        onClick = onCancelar,
+                        modifier = Modifier.size(52.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.Close,
+                            contentDescription = "Cancelar"
+                        )
+                    }
+                }
             }
         }
     }

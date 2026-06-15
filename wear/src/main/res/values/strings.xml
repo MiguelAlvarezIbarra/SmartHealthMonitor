@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">wear</string>
     <string name="hello_world">Hello, %1$s!</string>
+    <string name="watch_face_name">SmartHealth Face</string>
 </resources>

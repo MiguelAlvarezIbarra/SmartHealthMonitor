@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.BIND_WALLPAPER" />
 
     <uses-feature android:name="android.hardware.type.watch" />
     <uses-permission android:name="android.permission.BODY_SENSORS" />
@@ -47,6 +48,30 @@
             <intent-filter>
                 <action android:name="androidx.health.services.client.PASSIVE_LISTENER" />
             </intent-filter>
+        </service>
+
+        <!-- WatchFace básico — Sesión 10 -->
+        <service
+            android:name="mx.utng.smarthealthmonitor.wear.maai.watchface.HealthWatchFaceService"
+            android:exported="true"
+            android:label="@string/watch_face_name"
+            android:permission="android.permission.BIND_WALLPAPER">
+            <intent-filter>
+                <action android:name="android.service.wallpaper.WallpaperService" />
+                <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
+            </intent-filter>
+            <!-- Vista previa del WatchFace en el selector -->
+            <meta-data
+                android:name="com.google.android.wearable.watchface.preview"
+                android:resource="@mipmap/ic_launcher" />
+            <!-- Descriptor XML requerido por WallpaperService -->
+            <meta-data
+                android:name="android.service.wallpaper"
+                android:resource="@xml/watch_face" />
+            <!-- Identificador para el WatchFace Editor de Wear OS -->
+            <meta-data
+                android:name="androidx.wear.watchface.WATCH_FACE_SERVICE"
+                android:value="mx.utng.smarthealthmonitor.wear.maai.watchface.HealthWatchFaceService" />
         </service>
 
     </application>
