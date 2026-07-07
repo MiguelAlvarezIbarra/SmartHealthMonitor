@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- tv/src/main/res/values/colors.xml -->
+<!-- Paleta MD3 SmartHealth para Android TV -->
+<resources>
+    <!-- Azul primario SmartHealth -->
+    <color name="sh_primary">#1B4F8A</color>
+    <!-- Ámbar para alertas / accentos -->
+    <color name="sh_amber">#D4860A</color>
+    <!-- Fondo oscuro TV -->
+    <color name="sh_dark">#0D1117</color>
+    <!-- Rojo para FC fuera de rango -->
+    <color name="sh_error">#B3261E</color>
+    <!-- Blanco para textos -->
+    <color name="sh_white">#FFFFFF</color>
+</resources>

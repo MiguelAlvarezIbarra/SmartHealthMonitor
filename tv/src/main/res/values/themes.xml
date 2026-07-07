@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- tv/src/main/res/values/themes.xml -->
+<!-- Tema base para Android TV.
+     Theme.Leanback hereda de AppCompat y agrega los
+     estilos de navegación D-pad automáticamente -->
+<resources>
+    <style name="Theme.SmartHealthTV" parent="Theme.Leanback">
+        <item name="colorPrimary">@color/sh_primary</item>
+        <item name="colorAccent">@color/sh_amber</item>
+        <item name="android:colorBackground">@color/sh_dark</item>
+    </style>
+</resources>
