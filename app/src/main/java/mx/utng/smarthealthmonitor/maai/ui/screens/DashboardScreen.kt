@@ -44,6 +44,9 @@ fun DashboardScreen(
             onDismiss = { mostrarAlerta = false },
             onConfirmar = { nota ->
                 mostrarAlerta = false
+                scope.launch(Dispatchers.IO) {
+                    mx.utng.smarthealthmonitor.maai.data.MqttHelper.publishAlerta(if (nota.isNotBlank()) "Alerta: $nota" else "ALERTA DE EMERGENCIA")
+                }
                 scope.launch {
                     val result = snackbarHost.showSnackbar(
                         message = "✅ Alerta enviada a tus contactos de emergencia${if (nota.isNotBlank()) " con nota" else ""}",
@@ -121,8 +124,12 @@ fun DashboardScreen(
                     OutlinedButton(
                         onClick = {
                             CoroutineScope(Dispatchers.IO).launch {
-                                SmartHealthRepository.actualizarFC((60..110).random())
-                                SmartHealthRepository.actualizarPasos((3000..8000).random())
+                                val newFc = (60..110).random()
+                                val newPasos = (3000..8000).random()
+                                SmartHealthRepository.actualizarFC(newFc)
+                                SmartHealthRepository.actualizarPasos(newPasos)
+                                mx.utng.smarthealthmonitor.maai.data.MqttHelper.publishFC(newFc)
+                                mx.utng.smarthealthmonitor.maai.data.MqttHelper.publishPasos(newPasos)
                             }
                         },
                         modifier = Modifier.fillMaxWidth()

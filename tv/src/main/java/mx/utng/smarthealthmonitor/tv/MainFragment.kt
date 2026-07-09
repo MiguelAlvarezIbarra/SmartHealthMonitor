@@ -12,6 +12,7 @@ import androidx.leanback.widget.ListRowPresenter
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import mx.utng.smarthealthmonitor.maai.data.db.LecturaFC
 
@@ -77,22 +78,27 @@ class MainFragment : BrowseSupportFragment() {
 
     /**
      * Observa los StateFlows del [TvViewModel] y actualiza los adapters
-     * de forma reactiva cuando cambian los datos de Room o del wearable.
+     * de forma reactiva cuando cambian los datos de Room o del MQTT.
      */
     private fun observarDatos() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
-                // ── FC actual del wearable → Fila "Estado actual" ────────
+                // ── FC + Pasos → Fila "Estado actual" ────────────────────
+                // combine() redibuja la fila cuando cambia CUALQUIERA de
+                // los dos flows (antes solo se observaba la FC y los pasos
+                // se quedaban congelados en su valor inicial)
                 launch {
-                    viewModel.fc.collect { bpm ->
+                    combine(viewModel.fc, viewModel.pasos) { bpm, pasos ->
+                        bpm to pasos
+                    }.collect { (bpm, pasos) ->
                         estadoAdapter.clear()
                         // Card de frecuencia cardíaca actual
                         estadoAdapter.add(LecturaFC(valorBpm = bpm, hora = "Ahora"))
-                        // Card de pasos (valor actual del repository)
+                        // Card de pasos actuales
                         estadoAdapter.add(
                             LecturaFC(
-                                valorBpm = viewModel.pasos.value,
+                                valorBpm = pasos,
                                 hora     = "Pasos",
                                 esNormal = true
                             )

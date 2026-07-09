@@ -27,4 +27,7 @@ dependencies {
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     ksp("androidx.room:room-compiler:$roomVersion")
+    
+    // MQTT Client para comunicación Celular -> TV
+    api("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
 }

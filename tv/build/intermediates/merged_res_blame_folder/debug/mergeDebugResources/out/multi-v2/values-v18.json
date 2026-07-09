@@ -1,0 +1,38 @@
+{
+    "logs": [
+        {
+            "outputFile": "mx.utng.smarthealthmonitor.tv-mergeDebugResources-36:/values-v18/values-v18.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\mijel\\.gradle\\caches\\9.4.1\\transforms\\c3ccfa36859fb66f10ad4d25ea5faa37\\transformed\\leanback-1.2.0-alpha04\\res\\values-v18\\values-v18.xml",
+                    "from": {
+                        "startLines": "2,12",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,765",
+                        "endLines": "11,20",
+                        "endColumns": "12,12",
+                        "endOffsets": "760,1352"
+                    },
+                    "to": {
+                        "startLines": "3,13",
+                        "startColumns": "4,4",
+                        "startOffsets": "104,814",
+                        "endLines": "12,21",
+                        "endColumns": "12,12",
+                        "endOffsets": "809,1401"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\mijel\\.gradle\\caches\\9.4.1\\transforms\\3f5343e80c0474a8b00162dde97cd5f6\\transformed\\appcompat-1.0.0\\res\\values-v18\\values-v18.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "48",
+                        "endOffsets": "99"
+                    }
+                }
+            ]
+        }
+    ]
+}

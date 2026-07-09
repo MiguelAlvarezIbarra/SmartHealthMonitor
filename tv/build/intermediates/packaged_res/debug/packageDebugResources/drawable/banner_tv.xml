@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- tv/src/main/res/drawable/banner_tv.xml -->
+<!-- Banner 320x180dp que aparece en el launcher de Android TV.
+     Fondo azul oscuro con gradiente y texto SmartHealth -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Fondo de color primario -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#0D1117"
+                android:endColor="#1B4F8A"
+                android:angle="0" />
+        </shape>
+    </item>
+    <!-- Línea decorativa superior color ámbar -->
+    <item
+        android:bottom="160dp"
+        android:left="0dp"
+        android:right="0dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#D4860A" />
+            <size android:height="4dp" />
+        </shape>
+    </item>
+</layer-list>

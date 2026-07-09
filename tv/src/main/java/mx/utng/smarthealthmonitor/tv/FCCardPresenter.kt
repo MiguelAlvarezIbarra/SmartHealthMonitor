@@ -16,6 +16,9 @@ import mx.utng.smarthealthmonitor.maai.data.db.LecturaFC
  * Colores:
  *  - FC normal (60-100 bpm) → Azul primario (#1B4F8A)
  *  - FC fuera de rango       → Rojo error  (#B3261E)
+ *
+ * Caso especial: la card de pasos reutiliza LecturaFC como contenedor
+ * (hora == "Pasos") y se muestra con formato "N pasos" en vez de "N bpm".
  */
 class FCCardPresenter : Presenter() {
 
@@ -29,12 +32,20 @@ class FCCardPresenter : Presenter() {
         return ViewHolder(cardView)
     }
 
-    override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {
+    override fun onBindViewHolder(viewHolder: ViewHolder, item: Any?) {
         val card    = viewHolder.view as ImageCardView
         val lectura = item as LecturaFC
 
-        card.titleText   = "${lectura.valorBpm} bpm"
-        card.contentText = lectura.hora
+        // La card de pasos viene marcada con hora == "Pasos"
+        val esCardPasos = lectura.hora == "Pasos"
+
+        if (esCardPasos) {
+            card.titleText   = "%,d pasos".format(lectura.valorBpm)
+            card.contentText = "Hoy"
+        } else {
+            card.titleText   = "${lectura.valorBpm} bpm"
+            card.contentText = lectura.hora
+        }
 
         // Color de fondo según si la FC está en rango normal (60-100 bpm)
         val bgColor = if (lectura.esNormal) {

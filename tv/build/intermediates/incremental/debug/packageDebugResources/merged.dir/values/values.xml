@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ic_launcher_background">#1B4F8A</color>
+    <color name="sh_amber">#D4860A</color>
+    <color name="sh_dark">#0D1117</color>
+    <color name="sh_error">#B3261E</color>
+    <color name="sh_primary">#1B4F8A</color>
+    <color name="sh_white">#FFFFFF</color>
+    <style name="Theme.SmartHealthTV" parent="Theme.Leanback">
+        <item name="colorPrimary">@color/sh_primary</item>
+        <item name="colorAccent">@color/sh_amber</item>
+        <item name="android:colorBackground">@color/sh_dark</item>
+    </style>
+</resources>
